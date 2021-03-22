@@ -39,12 +39,12 @@ func publish(myDisruptor gdisruptor.Disruptor){
 	fmt.Println("publish init..")
 	for sequence := int64(1);sequence <=Iterations;{
 
-		sequence = myDisruptor.Reserve(Reservations)
+		sequence = myDisruptor.Reserve(Reservations) //首先预定一块空间
 		for lower := sequence - Reservations +1 ;lower <= sequence;lower++ {
 			ringBuffer[lower&BufferMask] = lower
 		}
 		fmt.Println("push消息:",sequence)
-		myDisruptor.Commit(sequence-Reservations+1,sequence)
+		myDisruptor.Commit(sequence-Reservations+1,sequence) //然后提交数据
 
 	}
 
